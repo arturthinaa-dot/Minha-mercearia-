@@ -1,0 +1,43 @@
+name: Gerar APK - Minha Mercearia
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      - name: Preparar projeto
+        run: |
+          unzip -q MinhaMerceariaAndroid.zip
+          mv MinhaMerceariaAndroid/* .
+          mv MinhaMerceariaAndroid/.[!.]* . 2>/dev/null || true
+          rmdir MinhaMerceariaAndroid
+
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Configurar Android
+        uses: android-actions/setup-android@v3
+
+      - name: Instalar ferramentas Android
+        run: |
+          yes | sdkmanager --licenses || true
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Gerar APK
+        run: |
+          gradle assembleDebug
+
+      - name: Disponibilizar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: MinhaMercearia-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
