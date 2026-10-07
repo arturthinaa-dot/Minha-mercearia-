@@ -13,7 +13,7 @@ jobs:
 
       - name: Preparar projeto
         run: |
-        unzip -q MinhaMerceariaAndroid_com_icone_carrinho.zip
+       unzip -q MinhaMerceariaAndroid_com_icone_carrinho.zip
           cp -r MinhaMerceariaAndroid/. .
           rm -rf MinhaMerceariaAndroid
 
