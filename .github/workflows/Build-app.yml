@@ -14,9 +14,8 @@ jobs:
       - name: Preparar projeto
         run: |
           unzip -q MinhaMerceariaAndroid.zip
-          mv MinhaMerceariaAndroid/* .
-          mv MinhaMerceariaAndroid/.[!.]* . 2>/dev/null || true
-          rmdir MinhaMerceariaAndroid
+          cp -r MinhaMerceariaAndroid/. .
+          rm -rf MinhaMerceariaAndroid
 
       - name: Configurar Java
         uses: actions/setup-java@v4
@@ -24,13 +23,10 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Configurar Android
-        uses: android-actions/setup-android@v3
-
-      - name: Instalar ferramentas Android
+      - name: Verificar Android SDK
         run: |
-          yes | sdkmanager --licenses || true
-          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          ls "$ANDROID_HOME"
 
       - name: Gerar APK
         run: |
